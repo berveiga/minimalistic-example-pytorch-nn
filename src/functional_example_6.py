@@ -13,7 +13,6 @@ from torch.utils.data import Dataset, DataLoader
 from torch import nn, optim
 
 # The next command line may be deleted
-from torch import functional as F
 from plotnine import data, aes, ggplot, geom_point
 from plotnine.animation import PlotnineAnimation
 
@@ -162,6 +161,5 @@ def fit_neural_network(EPOCHS):
 
 df_consolidated = fit_neural_network(50)
 fig = ggplot(df_consolidated, aes(x="x", y="y", color="flag")) + geom_point()
-fig.savefig("../images/plot_50.png")
-fig = (ggplot(df_consolidated, aes(x="x", y="y", color="flag")) + geom_point())
+fig
 fig.save("../plots/plot_50.png")
