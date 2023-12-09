@@ -1,5 +1,4 @@
-""" This code provides a simple example of unidimensional extrapolation using 
-a simple feedforward neural network in PyTorch."""
+
 
 # Load libraries
 import numpy as np
@@ -18,9 +17,9 @@ np.random.seed(123)
 
 # Generate training data
 # First example of training data: data to be interpolated
-#x_vec_train_1 = np.arange(-2, 1, 0.02)
-#x_vec_train_2 = np.arange(1, 2, 0.02)
-#x_vec_train = np.concatenate([x_vec_train_1, x_vec_train_2])
+x_vec_train_1 = np.arange(-2, 1, 0.02)
+x_vec_train_2 = np.arange(1, 2, 0.02)
+x_vec_train = np.concatenate([x_vec_train_1, x_vec_train_2])
 
 # Second example of training data: data to be interpolated
 x_vec_train = np.arange(-2, 3, 0.05).astype("float32")
@@ -155,9 +154,8 @@ def fit_neural_network(EPOCHS):
     return df_consolidated_final
     # Plot modelled test data
 
-df_consolidated = fit_neural_network(50)
-fig = ggplot(df_consolidated, aes(x="x", y="y", color="flag")) + geom_point()
-fig, plot = (ggplot(df_consolidated, aes(x="x", y="y", color="flag")) + geom_point())
-fig.savefig("../images/plot_50.png")
-fig = (ggplot(df_consolidated, aes(x="x", y="y", color="flag")) + geom_point())
-fig.save("../plots/plot_50.png")
+df_consolidated_100 = fit_neural_network(100)
+ggplot(df_consolidated_50, aes(x="x", y="y", color="flag")) + geom_point()
+#fig_40, plot = (ggplot(df_consolidated_50, aes(x="x", y="y", color="flag")) + geom_point()).draw(show=False, return_ggplot=True)
+
+fig_50.savefig("..")
