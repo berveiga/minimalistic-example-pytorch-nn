@@ -1,5 +1,7 @@
 """ This code provides a simple example of unidimensional extrapolation using 
-a simple feedforward neural network in PyTorch."""
+a simple feedforward neural network in PyTorch.
+Author: Bernardo Paschoarelli
+"""
 
 # Load libraries
 import numpy as np
@@ -9,6 +11,8 @@ import random
 import torch
 from torch.utils.data import Dataset, DataLoader
 from torch import nn, optim
+
+# The next command line may be deleted
 from torch import functional as F
 from plotnine import data, aes, ggplot, geom_point
 from plotnine.animation import PlotnineAnimation
@@ -18,7 +22,7 @@ np.random.seed(123)
 
 # Generate training data
 # First example of training data: data to be interpolated
-#x_vec_train_1 = np.arange(-2, 1, 0.02)
+#x_vec_train_1 = np.arange(-2, -1, 0.02)
 #x_vec_train_2 = np.arange(1, 2, 0.02)
 #x_vec_train = np.concatenate([x_vec_train_1, x_vec_train_2])
 
@@ -39,6 +43,7 @@ x_train = torch.tensor(x_vec_train, requires_grad=True)
 y_train = torch.tensor(y_vec_train, requires_grad=True)
 
 # Generate test data
+# x_vec_test = np.arange(-1, 1, 0.02).asteype("float32").reshape([100, 1])
 x_vec_test = np.arange(3, 5, 0.02).astype("float32").reshape([100, 1])
 y_vec_test = np.array(list(map(quad, x_vec_test)))
 
@@ -97,7 +102,7 @@ class MyTestData(Dataset):
     def __init__(self, len):
         super().__init__()
         self.x = x_test
-        self.x = y_test
+        self.y = y_test
         self.len = len
     def __getitem__(self, i):
         z = self.x[i], self.y[i]
@@ -157,7 +162,6 @@ def fit_neural_network(EPOCHS):
 
 df_consolidated = fit_neural_network(50)
 fig = ggplot(df_consolidated, aes(x="x", y="y", color="flag")) + geom_point()
-fig, plot = (ggplot(df_consolidated, aes(x="x", y="y", color="flag")) + geom_point())
 fig.savefig("../images/plot_50.png")
 fig = (ggplot(df_consolidated, aes(x="x", y="y", color="flag")) + geom_point())
 fig.save("../plots/plot_50.png")
