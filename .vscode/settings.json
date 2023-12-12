@@ -1,4 +1,10 @@
 {
     "CodeGPT.organizationId": "org-UJaDUNvHTo11Mx0iP2MNj64G",
-    "CodeGPT.model": "gpt-3.5-turbo"
+    "CodeGPT.model": "gpt-3.5-turbo",
+    "favorites.resources": [
+        {
+            "filePath": "src/functional_example_6.py",
+            "group": "Default"
+        }
+    ]
 }
