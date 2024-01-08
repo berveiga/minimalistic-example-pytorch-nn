@@ -19,12 +19,12 @@ np.random.seed(123)
 
 # Generate training data
 # First example of training data: data to be interpolated
-# x_vec_train_1 = np.arange(-2, -1, 0.02)
-# x_vec_train_2 = np.arange(1, 2, 0.02)
-# x_vec_train = np.concatenate([x_vec_train_1, x_vec_train_2])
+x_vec_train_1 = np.arange(-2, -1, 0.02)
+x_vec_train_2 = np.arange(1, 2, 0.02)
+x_vec_train = np.concatenate([x_vec_train_1, x_vec_train_2])
 
-# Second example of training data: data to be interpolated
-x_vec_train = np.arange(-2, 3, 0.05).astype("float32")
+# Second example of training data: data to be extrapolated
+#x_vec_train = np.arange(-2, 3, 0.05).astype("float32")
 
 len_train = len(x_vec_train)
 x_vec_train = np.reshape(x_vec_train, (len_train, 1))
@@ -41,8 +41,8 @@ x_train = torch.tensor(x_vec_train, requires_grad=True)
 y_train = torch.tensor(y_vec_train, requires_grad=True)
 
 # Generate test data
-# x_vec_test = np.arange(-1, 1, 0.02).asteype("float32").reshape([100, 1])
-x_vec_test = np.arange(3, 5, 0.02).astype("float32").reshape([100, 1])
+x_vec_test = np.arange(-1, 1, 0.02).astype("float32").reshape([100, 1])
+# x_vec_test = np.arange(3, 5, 0.02).astype("float32").reshape([100, 1])
 y_vec_test = np.array(list(map(quad, x_vec_test)))
 
 x_test = torch.tensor(x_vec_test, requires_grad=True)
@@ -134,7 +134,6 @@ class MyNN(nn.Module):
         x = self.activation(x)
         x = self.layer2(x)
         return x
-
 
 class MyTrainData(Dataset):
     def __init__(self, len):
