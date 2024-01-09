@@ -136,11 +136,14 @@ class MyNN(nn.Module):
         return x
 
 class MyTrainData(Dataset):
-    def __init__(self, len):
+    def __init__(self, len, x_train, y_train):
         super().__init__()
         self.x = x_train
         self.y = y_train
-        self.len = len
+        if len(x_train) == len(y_train):
+            self.len = len(x_train)
+        else:
+            print("Error: x_train y_train have different lengths")
 
     def __getitem__(self, i):
         z = self.x[i], self.y[i]
@@ -151,12 +154,14 @@ class MyTrainData(Dataset):
 
 
 class MyTestData(Dataset):
-    def __init__(self, len):
+    def __init__(self, len, x_test, y_test):
         super().__init__()
         self.x = x_test
         self.y = y_test
-        self.len = len
-
+        if len(x_test) == len(y_test):
+            self.len = len(x_test)
+        else:
+            print("Error: x_test and y_test have different lengths")
     def __getitem__(self, i):
         z = self.x[i], self.y[i]
         return z
@@ -168,7 +173,6 @@ class MyTestData(Dataset):
 my_train_dataset = MyTrainData(len_train)
 my_test_dataset = MyTestData(100)
 dataloader = DataLoader(my_train_dataset, batch_size=1)
-
 
 def fit_neural_network(EPOCHS):
     model = MyNN()
