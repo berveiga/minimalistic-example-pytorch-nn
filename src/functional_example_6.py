@@ -136,7 +136,7 @@ class MyNN(nn.Module):
         return x
 
 class MyTrainData(Dataset):
-    def __init__(self, len, x_train, y_train):
+    def __init__(self, x_train, y_train):
         super().__init__()
         self.x = x_train
         self.y = y_train
@@ -154,7 +154,7 @@ class MyTrainData(Dataset):
 
 
 class MyTestData(Dataset):
-    def __init__(self, len, x_test, y_test):
+    def __init__(self, x_test, y_test):
         super().__init__()
         self.x = x_test
         self.y = y_test
@@ -170,8 +170,8 @@ class MyTestData(Dataset):
         return self.len
 
 
-my_train_dataset = MyTrainData(len_train)
-my_test_dataset = MyTestData(100)
+my_train_dataset = MyTrainData(x_train, y_train)
+my_test_dataset = MyTestData(x_test, y_test)
 dataloader = DataLoader(my_train_dataset, batch_size=1)
 
 def fit_neural_network(EPOCHS):
@@ -297,9 +297,9 @@ def fit_neural_network(EPOCHS):
 
 
 df_consolidated_50 = fit_neural_network(50)
-fig_50 = ggplot(df_consolidated, aes(x="x", y="y", color="flag")) + geom_point()
-fig
-fig.save("../plots/plot_50.png")
+fig_50 = ggplot(df_consolidated_50, aes(x="x", y="y", color="flag")) + geom_point()
+fig_50
+fig_50.save("../plots/plot_50.png")
 
 df_consolidated_5000 = fit_neural_network(5000)
 fig_5000 = ggplot(df_consolidated_5000, aes(x="x", y="y", color="flag")) + geom_point()
