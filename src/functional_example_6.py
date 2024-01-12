@@ -3,12 +3,15 @@ a simple feedforward neural network in PyTorch.
 Author: Bernardo Paschoarelli
 """
 
+# Next step: move the creation of training data to specific .py script
+# Next step (2): move the plotting .py script
 # Load libraries
 import numpy as np
 import pandas as pd
 import torch
-from torch.utils.data import Dataset, DataLoader
+from torch.utils.data import Dataset, DataLoader 
 from torch import nn, optim
+from nnclasses import  MyNN, MyTrainData, MyTestData
 
 # The next command line may be deleted
 from plotnine import data, aes, ggplot, geom_point
@@ -17,23 +20,25 @@ from plotnine.animation import PlotnineAnimation
 # Set random seed
 np.random.seed(123)
 
-# Generate training data
-# First example of training data: data to be interpolated
+# To-do add pytorch seed (if required)
+
+
+"""
+ Generate training data
+ First example of training data: data to be interpolated
+"""
 x_vec_train_1 = np.arange(-2, -1, 0.02)
 x_vec_train_2 = np.arange(1, 2, 0.02)
 x_vec_train = np.concatenate([x_vec_train_1, x_vec_train_2])
 
 # Second example of training data: data to be extrapolated
-#x_vec_train = np.arange(-2, 3, 0.05).astype("float32")
+#x_vec_train = np.arange(-2, 3, 0.05)
 
-len_train = len(x_vec_train)
-x_vec_train = np.reshape(x_vec_train, (len_train, 1))
-x_vec_train = x_vec_train.astype("float32")
+x_vec_train = np.reshape(x_vec_train, (-1, 1)).astype("float32")
 
 # Generate target values for the training data
 def quad(x):
     return 0.5 * x**2 - x
-
 
 y_vec_train = np.array(list(map(quad, x_vec_train)))
 
@@ -41,43 +46,12 @@ x_train = torch.tensor(x_vec_train, requires_grad=True)
 y_train = torch.tensor(y_vec_train, requires_grad=True)
 
 # Generate test data
-x_vec_test = np.arange(-1, 1, 0.02).astype("float32").reshape([100, 1])
+x_vec_test = np.arange(-1, 1, 0.02).astype("float32").reshape([-1, 1])
 # x_vec_test = np.arange(3, 5, 0.02).astype("float32").reshape([100, 1])
 y_vec_test = np.array(list(map(quad, x_vec_test)))
 
 x_test = torch.tensor(x_vec_test, requires_grad=True)
 y_test = torch.tensor(y_vec_test, requires_grad=True)
-
-# Define training and test dataframe
-df_train = pd.DataFrame(
-    {
-        "x": x_vec_train.reshape(
-            [
-                -1,
-            ]
-        ),
-        "y": y_vec_train.reshape(
-            [
-                -1,
-            ]
-        ),
-    }
-)
-
-df_test = pd.DataFrame(
-    {
-        "x": x_vec_test.reshape(
-            [
-                -1,
-            ]
-        ),
-        "y": y_vec_test.reshape(
-            [
-                -1,
-            ]
-        ),
-    }
-)
 
 # Plot training and test datasets
 concatenated_x_data = np.concatenate(
@@ -118,57 +92,12 @@ df_consolidated_data = pd.DataFrame(
     {"x": concatenated_x_data, "y": concatenated_y_data, "flag": flag_y}
 )
 
+# Plot training and data set
 ggplot(df_consolidated_data, aes(x="x", y="y", color="flag")) + geom_point()
 
-
-# Define neural network
-class MyNN(nn.Module):
-    def __init__(self):
-        super().__init__()
-        self.layer1 = nn.Linear(1, 10)
-        self.activation = nn.Sigmoid()
-        self.layer2 = nn.Linear(10, 1)
-
-    def forward(self, x):
-        x = self.layer1(x)
-        x = self.activation(x)
-        x = self.layer2(x)
-        return x
-
-class MyTrainData(Dataset):
-    def __init__(self, x_train, y_train):
-        super().__init__()
-        self.x = x_train
-        self.y = y_train
-        if len(x_train) == len(y_train):
-            self.len = len(x_train)
-        else:
-            print("Error: x_train y_train have different lengths")
-
-    def __getitem__(self, i):
-        z = self.x[i], self.y[i]
-        return z
-
-    def __len__(self):
-        return self.len
-
-
-class MyTestData(Dataset):
-    def __init__(self, x_test, y_test):
-        super().__init__()
-        self.x = x_test
-        self.y = y_test
-        if len(x_test) == len(y_test):
-            self.len = len(x_test)
-        else:
-            print("Error: x_test and y_test have different lengths")
-    def __getitem__(self, i):
-        z = self.x[i], self.y[i]
-        return z
-
-    def __len__(self):
-        return self.len
-
+"""
+Train the neural network.
+"""
 
 my_train_dataset = MyTrainData(x_train, y_train)
 my_test_dataset = MyTestData(x_test, y_test)
@@ -199,50 +128,32 @@ def fit_neural_network(EPOCHS):
     output_vec_train = (
         output_tensor_train.detach()
         .numpy()
-        .reshape(
-            [
-                -1,
-            ]
-        )
-    )
+        .reshape( [ -1, ]))
 
     output_tensor_test = model(my_test_dataset.x)
     output_vec_test = (
         output_tensor_test.detach()
         .numpy()
-        .reshape(
-            [
-                -1,
-            ]
-        )
+        .reshape( [ -1, ])
     )
 
-    # Concatenate training and test data
+    """
+    Concatenate training and test data
+    """
     print(str(len(output_vec_test)))
     concatenated_x_train_test = np.concatenate(
         (
-            x_vec_train.reshape(
-                [
-                    -1,
-                ]
-            ),
-            x_vec_test.reshape(
-                [
-                    -1,
-                ]
-            ),
+            x_vec_train.reshape( [ -1, ]),
+            x_vec_test.reshape( [ -1, ]),
         )
     )
     concatenated_y_train_test = np.concatenate(
         (
-            y_vec_train.reshape(
-                [
-                    -1,
-                ]
-            ),
+            y_vec_train.reshape( [ -1, ]),
             output_vec_test,
         )
     )
+
     flag_y_train_test = int(len(concatenated_x_train_test) / 2) * ["train_data"] + int(
         len(concatenated_y_train_test) / 2
     ) * ["test_data"]
@@ -256,26 +167,14 @@ def fit_neural_network(EPOCHS):
 
     concatenated_x_train_test2 = np.concatenate(
         (
-            x_vec_train.reshape(
-                [
-                    -1,
-                ]
-            ),
-            x_vec_test.reshape(
-                [
-                    -1,
-                ]
-            ),
+            x_vec_train.reshape( [ -1, ]),
+            x_vec_test.reshape( [ -1, ]),
         )
     )
     concatenated_y_train_test2 = np.concatenate(
         (
             output_vec_train,
-            y_vec_test.reshape(
-                [
-                    -1,
-                ]
-            ),
+            y_vec_test.reshape( [ -1, ]),
         )
     )
     flag_y_train_test2 = int(len(concatenated_x_train_test2) / 2) * [
