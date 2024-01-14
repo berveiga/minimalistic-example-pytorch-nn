@@ -1,17 +1,18 @@
 """ This code provides a simple example of unidimensional extrapolation using 
 a simple feedforward neural network in PyTorch.
-Author: Bernardo Paschoarelli
+Author: Bernardo Paschoarelli (ber.veiga@gmail.com)
 """
 
 # Next step: move the creation of training data to specific .py script
 # Next step (2): move the plotting .py script
+# Next step (3): change color of one of the graphs in the test data
 # Load libraries
 import numpy as np
 import pandas as pd
 import torch
-from torch.utils.data import Dataset, DataLoader 
+from torch.utils.data import DataLoader
 from torch import nn, optim
-from nnclasses import  MyNN, MyTrainData, MyTestData
+from nnclasses import MyNN, MyTrainData, MyTestData
 
 # The next command line may be deleted
 from plotnine import data, aes, ggplot, geom_point
@@ -22,7 +23,6 @@ np.random.seed(123)
 
 # To-do add pytorch seed (if required)
 
-
 """
  Generate training data
  First example of training data: data to be interpolated
@@ -32,13 +32,14 @@ x_vec_train_2 = np.arange(1, 2, 0.02)
 x_vec_train = np.concatenate([x_vec_train_1, x_vec_train_2])
 
 # Second example of training data: data to be extrapolated
-#x_vec_train = np.arange(-2, 3, 0.05)
+# x_vec_train = np.arange(-2, 3, 0.05)
 
 x_vec_train = np.reshape(x_vec_train, (-1, 1)).astype("float32")
 
 # Generate target values for the training data
 def quad(x):
     return 0.5 * x**2 - x
+
 
 y_vec_train = np.array(list(map(quad, x_vec_train)))
 
@@ -103,6 +104,7 @@ my_train_dataset = MyTrainData(x_train, y_train)
 my_test_dataset = MyTestData(x_test, y_test)
 dataloader = DataLoader(my_train_dataset, batch_size=1)
 
+
 def fit_neural_network(EPOCHS):
     model = MyNN()
     loss_fn = nn.MSELoss()
@@ -128,13 +130,22 @@ def fit_neural_network(EPOCHS):
     output_vec_train = (
         output_tensor_train.detach()
         .numpy()
-        .reshape( [ -1, ]))
+        .reshape(
+            [
+                -1,
+            ]
+        )
+    )
 
     output_tensor_test = model(my_test_dataset.x)
     output_vec_test = (
         output_tensor_test.detach()
         .numpy()
-        .reshape( [ -1, ])
+        .reshape(
+            [
+                -1,
+            ]
+        )
     )
 
     """
@@ -143,13 +154,25 @@ def fit_neural_network(EPOCHS):
     print(str(len(output_vec_test)))
     concatenated_x_train_test = np.concatenate(
         (
-            x_vec_train.reshape( [ -1, ]),
-            x_vec_test.reshape( [ -1, ]),
+            x_vec_train.reshape(
+                [
+                    -1,
+                ]
+            ),
+            x_vec_test.reshape(
+                [
+                    -1,
+                ]
+            ),
         )
     )
     concatenated_y_train_test = np.concatenate(
         (
-            y_vec_train.reshape( [ -1, ]),
+            y_vec_train.reshape(
+                [
+                    -1,
+                ]
+            ),
             output_vec_test,
         )
     )
@@ -167,14 +190,26 @@ def fit_neural_network(EPOCHS):
 
     concatenated_x_train_test2 = np.concatenate(
         (
-            x_vec_train.reshape( [ -1, ]),
-            x_vec_test.reshape( [ -1, ]),
+            x_vec_train.reshape(
+                [
+                    -1,
+                ]
+            ),
+            x_vec_test.reshape(
+                [
+                    -1,
+                ]
+            ),
         )
     )
     concatenated_y_train_test2 = np.concatenate(
         (
             output_vec_train,
-            y_vec_test.reshape( [ -1, ]),
+            y_vec_test.reshape(
+                [
+                    -1,
+                ]
+            ),
         )
     )
     flag_y_train_test2 = int(len(concatenated_x_train_test2) / 2) * [
@@ -188,6 +223,7 @@ def fit_neural_network(EPOCHS):
             "flag": flag_y_train_test2,
         }
     )
+
     df_consolidated_final = pd.concat(
         (df_consolidated_train_test, df_consolidated_train_test2), axis=0
     )
@@ -205,6 +241,7 @@ fig_5000 = ggplot(df_consolidated_5000, aes(x="x", y="y", color="flag")) + geom_
 fig_5000
 fig_5000.save("../plots/plot_5000.png")
 
+
 def plot_neural_network(k):
-    p = (ggplot(df_consolidated, aes(x="x", y="y", color="flag")) + geom_point())
+    p = ggplot(df_consolidated, aes(x="x", y="y", color="flag")) + geom_point()
     return p
