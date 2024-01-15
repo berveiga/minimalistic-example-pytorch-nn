@@ -236,10 +236,10 @@ fig_50 = ggplot(df_consolidated_50, aes(x="x", y="y", color="flag")) + geom_poin
 fig_50
 fig_50.save("../plots/plot_50.png")
 
-df_consolidated_5000 = fit_neural_network(5000)
-fig_5000 = ggplot(df_consolidated_5000, aes(x="x", y="y", color="flag")) + geom_point()
-fig_5000
-fig_5000.save("../plots/plot_5000.png")
+#df_consolidated_5000 = fit_neural_network(5000)
+#fig_5000 = ggplot(df_consolidated_5000, aes(x="x", y="y", color="flag")) + geom_point()
+#fig_5000
+#fig_5000.save("../plots/plot_5000.png")
 
 
 def plot_neural_network(k):
