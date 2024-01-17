@@ -9,8 +9,12 @@ __pycache__/
 # Distribution / packaging
 .Python
 build/
+.vscode/
 develop-eggs/
 dist/
+imageio/
+imageio
+.model_quadratic_function.py.swp
 downloads/
 eggs/
 .eggs/
