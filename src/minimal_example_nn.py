@@ -6,7 +6,6 @@ Author: Bernardo Veiga (ber.veiga@gmail.com)
 # Next step: move the creation of dataframe to be plotted outside the training code
 # Next step: move the creation of training data to specific .py script
 # Next step (2): move the plotting .py script
-# Next step (3): change color of one of the graphs in the test data
 # Load libraries
 import numpy as np
 import pandas as pd
